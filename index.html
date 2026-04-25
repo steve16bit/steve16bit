@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapa de Clientes</title>
+
+  <!-- MapLibre GL JS — CDN -->
+  <link href="https://unpkg.com/maplibre-gl@4.1.2/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@4.1.2/dist/maplibre-gl.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #3d3221;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── Zoom controls ── */
+    .maplibregl-ctrl-group {
+      background: #2e2a22 !important;
+      border: 1px solid #5a5040 !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5) !important;
+      border-radius: 6px !important;
+    }
+    .maplibregl-ctrl-group button {
+      background: transparent !important;
+      color: #c8bfaa !important;
+      border-bottom: 1px solid #5a5040 !important;
+      width: 30px !important;
+      height: 30px !important;
+    }
+    .maplibregl-ctrl-group button:last-child {
+      border-bottom: none !important;
+    }
+    .maplibregl-ctrl-group button:hover {
+      background: #3e3830 !important;
+    }
+    .maplibregl-ctrl-icon {
+      filter: invert(80%) sepia(10%) saturate(400%) hue-rotate(5deg);
+    }
+
+    /* ── Attribution bar ── */
+    .maplibregl-ctrl-attrib {
+      background: rgba(30,25,18,0.85) !important;
+      color: #8a8070 !important;
+      font-size: 10px !important;
+      padding: 2px 6px !important;
+      border-radius: 4px 0 0 0 !important;
+    }
+    .maplibregl-ctrl-attrib a {
+      color: #a09080 !important;
+    }
+
+    /* ── Hover card ── */
+    #hover-card {
+      position: fixed;
+      z-index: 9999;
+      width: 220px;
+      background: #2a2420;
+      border: 1px solid #4a4035;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.18s ease;
+      display: none;
+    }
+    #hover-card.visible {
+      display: block;
+      opacity: 1;
+    }
+    #hover-card.hiding {
+      opacity: 0;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      display: block;
+      border-radius: 9px 9px 0 0;
+      background: #3a3530;
+    }
+
+    .card-body {
+      padding: 10px 12px 12px;
+    }
+
+    .card-client {
+      font-size: 13px;
+      font-weight: 700;
+      color: #e8dfd0;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-project {
+      font-size: 12px;
+      color: #a09880;
+      margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-divider {
+      height: 1px;
+      background: #3a3530;
+      margin-bottom: 8px;
+    }
+
+    .card-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+
+    .card-detail-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #c8bfaa;
+    }
+
+    .card-detail-icon {
+      font-size: 12px;
+      flex-shrink: 0;
+      width: 16px;
+      text-align: center;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .status-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 12px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    /* ── API key warning banner ── */
+    #api-key-warning {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2000;
+      background: rgba(180, 80, 20, 0.95);
+      color: #fff;
+      font-size: 12px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      white-space: nowrap;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+      pointer-events: none;
+    }
+    #api-key-warning a {
+      color: #ffe090;
+      font-weight: 700;
+    }
+
+    /* ── Legend ── */
+    #legend {
+      position: absolute;
+      bottom: 32px;
+      left: 12px;
+      z-index: 1000;
+      background: rgba(30,25,18,0.88);
+      border: 1px solid #4a4035;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #c8bfaa;
+      font-size: 11px;
+    }
+
+    #legend h4 {
+      font-size: 11px;
+      font-weight: 700;
+      color: #e8dfd0;
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+    .legend-item:last-child { margin-bottom: 0; }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 1.5px solid rgba(255,255,255,0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <!-- API key warning (shown only when placeholder key is still in use) -->
+  <div id="api-key-warning" style="display:none">
+    ⚠️ Map tiles require a free API key from <a href="https://maptiler.com" target="_blank">maptiler.com</a> — replace <code>get_your_own_key</code> in the script.
+  </div>
+
+  <!-- Hover card -->
+  <div id="hover-card">
+    <img class="card-img" id="card-img" src="" alt="Foto do projeto" />
+    <div class="card-body">
+      <div class="card-client" id="card-client"></div>
+      <div class="card-project" id="card-project"></div>
+      <div class="card-divider"></div>
+      <div class="card-details">
+        <div class="card-detail-row">
+          <span class="card-detail-icon">📍</span>
+          <span id="card-location"></span>
+        </div>
+        <div class="card-detail-row">
+          <span class="card-detail-icon">📅</span>
+          <span id="card-year"></span>
+        </div>
+        <div class="card-detail-row">
+          <span class="card-detail-icon">🏗️</span>
+          <span id="card-type"></span>
+        </div>
+        <div class="card-detail-row">
+          <span class="card-detail-icon">📐</span>
+          <span id="card-area"></span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="status-badge" id="card-status"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div id="legend">
+    <h4>Status</h4>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#29b6d8;"></div>
+      <span>Concluído</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#d97b2a;"></div>
+      <span>Em andamento</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#7b9fd8;"></div>
+      <span>Planejado</span>
+    </div>
+  </div>
+
+  <script>
+    // ── Replace with your own free API key from https://maptiler.com ──
+    const MAPTILER_KEY = 'get_your_own_key';
+
+    // Warn when placeholder key is still in use
+    if (MAPTILER_KEY === 'get_your_own_key') {
+      document.getElementById('api-key-warning').style.display = 'block';
+    }
+
+    // ── Client data ──────────────────────────────────────────────────
+    const clients = [
+      {
+        id: 1,
+        client: 'Construtora Horizonte',
+        project: 'Residencial Jardim das Flores',
+        lat: -23.5505,
+        lng: -46.6333,
+        location: 'São Paulo, SP',
+        year: '2023',
+        type: 'Residencial',
+        area: '8.400 m²',
+        status: 'done',
+        image: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=80'
+      },
+      {
+        id: 2,
+        client: 'RJ Empreendimentos',
+        project: 'Torre Business Center',
+        lat: -22.9068,
+        lng: -43.1729,
+        location: 'Rio de Janeiro, RJ',
+        year: '2024',
+        type: 'Comercial',
+        area: '12.600 m²',
+        status: 'progress',
+        image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&q=80'
+      },
+      {
+        id: 3,
+        client: 'Sul Arquitetura',
+        project: 'Condomínio Vista Serrana',
+        lat: -25.4284,
+        lng: -49.2733,
+        location: 'Curitiba, PR',
+        year: '2025',
+        type: 'Residencial',
+        area: '5.200 m²',
+        status: 'planned',
+        image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&q=80'
+      },
+      {
+        id: 4,
+        client: 'MG Construções',
+        project: 'Centro Integrado Savassi',
+        lat: -19.9167,
+        lng: -43.9345,
+        location: 'Belo Horizonte, MG',
+        year: '2023',
+        type: 'Misto',
+        area: '9.800 m²',
+        status: 'done',
+        image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&q=80'
+      },
+      {
+        id: 5,
+        client: 'Ilha Projetos',
+        project: 'Marina Residencial Beira-Mar',
+        lat: -27.5954,
+        lng: -48.5480,
+        location: 'Florianópolis, SC',
+        year: '2024',
+        type: 'Residencial',
+        area: '7.100 m²',
+        status: 'progress',
+        image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&q=80'
+      },
+      {
+        id: 6,
+        client: 'Espaço Urbano',
+        project: 'Hub Tecnológico Campinas',
+        lat: -22.9056,
+        lng: -47.0608,
+        location: 'Campinas, SP',
+        year: '2025',
+        type: 'Comercial',
+        area: '14.300 m²',
+        status: 'planned',
+        image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80'
+      },
+      {
+        id: 7,
+        client: 'Litoral Engenharia',
+        project: 'Residencial Praia Grande',
+        lat: -24.0046,
+        lng: -46.4002,
+        location: 'Santos, SP',
+        year: '2022',
+        type: 'Residencial',
+        area: '6.700 m²',
+        status: 'done',
+        image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&q=80'
+      },
+      {
+        id: 8,
+        client: 'Porto Alegre Obras',
+        project: 'Complexo Cultural Moinhos',
+        lat: -30.0346,
+        lng: -51.2177,
+        location: 'Porto Alegre, RS',
+        year: '2024',
+        type: 'Cultural',
+        area: '11.500 m²',
+        status: 'progress',
+        image: 'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=400&q=80'
+      },
+      {
+        id: 9,
+        client: 'Interior SP Construtora',
+        project: 'Parque Industrial Ribeirão',
+        lat: -21.1700,
+        lng: -47.8100,
+        location: 'Ribeirão Preto, SP',
+        year: '2025',
+        type: 'Industrial',
+        area: '22.000 m²',
+        status: 'planned',
+        image: 'https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=400&q=80'
+      },
+      {
+        id: 10,
+        client: 'Vitória Arquitetura',
+        project: 'Hotel Boutique Petrópolis',
+        lat: -22.5044,
+        lng: -43.1820,
+        location: 'Petrópolis, RJ',
+        year: '2023',
+        type: 'Hotelaria',
+        area: '4.900 m²',
+        status: 'done',
+        image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=80'
+      }
+    ];
+
+    // ── Pin color by status ──────────────────────────────────────────
+    const STATUS_COLORS = {
+      done:     '#29b6d8',
+      progress: '#d97b2a',
+      planned:  '#7b9fd8'
+    };
+
+    const STATUS_LABELS = {
+      done:     'Concluído',
+      progress: 'Em andamento',
+      planned:  'Planejado'
+    };
+
+    // ── Create SVG drop-pin element ─────────────────────────────────
+    function createPin(color) {
+      const el = document.createElement('div');
+      el.style.cursor = 'pointer';
+      el.style.transition = 'transform 0.15s ease';
+      el.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="40" viewBox="0 0 28 40">
+          <filter id="shadow-${color.replace('#','')}">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.5)"/>
+          </filter>
+          <path
+            d="M14 0C6.27 0 0 6.27 0 14c0 10.5 14 26 14 26S28 24.5 28 14C28 6.27 21.73 0 14 0z"
+            fill="${color}"
+            filter="url(#shadow-${color.replace('#','')})"
+          />
+          <circle cx="14" cy="14" r="5.5" fill="rgba(255,255,255,0.88)"/>
+        </svg>`;
+      el.addEventListener('mouseenter', () => {
+        el.style.transform = 'scale(1.2) translateY(-3px)';
+      });
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = 'scale(1) translateY(0)';
+      });
+      return el;
+    }
+
+    // ── Hover card logic ─────────────────────────────────────────────
+    const card      = document.getElementById('hover-card');
+    let hideTimeout = null;
+
+    function showCard(client, markerEl) {
+      clearTimeout(hideTimeout);
+
+      const color = STATUS_COLORS[client.status] || '#aaa';
+
+      document.getElementById('card-img').src        = client.image;
+      document.getElementById('card-client').textContent  = client.client;
+      document.getElementById('card-project').textContent = client.project;
+      document.getElementById('card-location').textContent = client.location;
+      document.getElementById('card-year').textContent    = client.year;
+      document.getElementById('card-type').textContent    = client.type;
+      document.getElementById('card-area').textContent    = client.area;
+
+      const badge = document.getElementById('card-status');
+      badge.textContent = STATUS_LABELS[client.status] || client.status;
+      badge.style.background = color;
+
+      // Position the card near the marker
+      const rect   = markerEl.getBoundingClientRect();
+      const cardW  = 220;
+      const cardH  = 320; // approximate
+      const gap    = 12;
+
+      let left = rect.right + gap;
+      let top  = rect.top - 60;
+
+      // Smart repositioning: avoid going off right edge
+      if (left + cardW > window.innerWidth - 10) {
+        left = rect.left - cardW - gap;
+      }
+      // Avoid going off bottom edge
+      if (top + cardH > window.innerHeight - 10) {
+        top = window.innerHeight - cardH - 10;
+      }
+      // Avoid going above top edge
+      if (top < 10) top = 10;
+      // Avoid going off left edge
+      if (left < 10) left = 10;
+
+      card.style.left = left + 'px';
+      card.style.top  = top  + 'px';
+
+      card.classList.remove('hiding');
+      card.classList.add('visible');
+    }
+
+    function hideCard() {
+      card.classList.add('hiding');
+      hideTimeout = setTimeout(() => {
+        card.classList.remove('visible', 'hiding');
+      }, 200);
+    }
+
+    // ── MapLibre GL JS init ──────────────────────────────────────────
+    const map = new maplibregl.Map({
+      container: 'map',
+      center: [-46.5, -23.5],
+      zoom: 7,
+      minZoom: 3,
+      maxZoom: 18,
+
+      style: {
+        version: 8,
+        glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+        sources: {
+          openmaptiles: {
+            type: 'vector',
+            // Replace 'get_your_own_key' with your free API key from https://maptiler.com
+            url: `https://api.maptiler.com/tiles/v3-openmaptiles/tiles.json?key=${MAPTILER_KEY}`
+          }
+        },
+        layers: [
+          // 1. Background
+          {
+            id: 'background',
+            type: 'background',
+            paint: {
+              'background-color': '#3d3221'
+            }
+          },
+
+          // 2. Landuse — parks, forest, nature reserves
+          {
+            id: 'landuse',
+            type: 'fill',
+            source: 'openmaptiles',
+            'source-layer': 'landuse',
+            filter: ['match', ['get', 'class'],
+              ['park', 'forest', 'nature_reserve', 'grass', 'wood'], true, false],
+            paint: {
+              'fill-color': '#433826',
+              'fill-antialias': true
+            }
+          },
+
+          // 3. Water (oceans, lakes)
+          {
+            id: 'water',
+            type: 'fill',
+            source: 'openmaptiles',
+            'source-layer': 'water',
+            paint: {
+              'fill-color': '#e8e0d0',
+              'fill-antialias': true
+            }
+          },
+
+          // 4. Waterway lines (rivers, streams)
+          {
+            id: 'waterway',
+            type: 'line',
+            source: 'openmaptiles',
+            'source-layer': 'waterway',
+            filter: ['match', ['get', 'class'],
+              ['river', 'canal', 'stream', 'drain'], true, false],
+            paint: {
+              'line-color': '#e8e0d0',
+              'line-width': [
+                'interpolate', ['linear'], ['zoom'],
+                5, 0.5,
+                12, 1.5
+              ]
+            }
+          },
+
+          // 5. Landuse overlay — residential, commercial, industrial
+          {
+            id: 'landuse_overlay',
+            type: 'fill',
+            source: 'openmaptiles',
+            'source-layer': 'landuse',
+            filter: ['match', ['get', 'class'],
+              ['residential', 'commercial', 'industrial', 'retail', 'hospital', 'school', 'university'], true, false],
+            paint: {
+              'fill-color': '#6b5f4e',
+              'fill-antialias': true
+            }
+          },
+
+          // 6. Buildings
+          {
+            id: 'building',
+            type: 'fill',
+            source: 'openmaptiles',
+            'source-layer': 'building',
+            minzoom: 12,
+            paint: {
+              'fill-color': '#574d3e',
+              'fill-outline-color': '#4a4132',
+              'fill-antialias': true
+            }
+          },
+
+          // 7. Roads — paths & footways
+          {
+            id: 'road_path',
+            type: 'line',
+            source: 'openmaptiles',
+            'source-layer': 'transportation',
+            filter: ['match', ['get', 'class'],
+              ['path', 'track', 'footway', 'pedestrian', 'cycleway'], true, false],
+            layout: { 'line-cap': 'round', 'line-join': 'round' },
+            paint: {
+              'line-color': '#6b5f4e',
+              'line-width': 0.4
+            }
+          },
+
+          // 8. Roads — minor (residential, service)
+          {
+            id: 'road_minor',
+            type: 'line',
+            source: 'openmaptiles',
+            'source-layer': 'transportation',
+            filter: ['match', ['get', 'class'],
+              ['minor', 'residential', 'service', 'unclassified'], true, false],
+            layout: { 'line-cap': 'round', 'line-join': 'round' },
+            paint: {
+              'line-color': '#857a68',
+              'line-width': [
+                'interpolate', ['linear'], ['zoom'],
+                10, 0.6,
+                15, 1.0
+              ]
+            }
+          },
+
+          // 9. Roads — secondary
+          {
+            id: 'road_secondary',
+            type: 'line',
+            source: 'openmaptiles',
+            'source-layer': 'transportation',
+            filter: ['match', ['get', 'class'],
+              ['secondary', 'tertiary'], true, false],
+            layout: { 'line-cap': 'round', 'line-join': 'round' },
+            paint: {
+              'line-color': '#a09080',
+              'line-width': [
+                'interpolate', ['linear'], ['zoom'],
+                8, 1.0,
+                14, 2.0
+              ]
+            }
+          },
+
+          // 10. Roads — primary
+          {
+            id: 'road_primary',
+            type: 'line',
+            source: 'openmaptiles',
+            'source-layer': 'transportation',
+            filter: ['match', ['get', 'class'],
+              ['primary'], true, false],
+            layout: { 'line-cap': 'round', 'line-join': 'round' },
+            paint: {
+              'line-color': '#c8bfaa',
+              'line-width': [
+                'interpolate', ['linear'], ['zoom'],
+                6, 2.0,
+                14, 3.0
+              ]
+            }
+          },
+
+          // 11. Roads — motorway/trunk
+          {
+            id: 'road_motorway',
+            type: 'line',
+            source: 'openmaptiles',
+            'source-layer': 'transportation',
+            filter: ['match', ['get', 'class'],
+              ['motorway', 'trunk'], true, false],
+            layout: { 'line-cap': 'round', 'line-join': 'round' },
+            paint: {
+              'line-color': '#d4c8b0',
+              'line-width': [
+                'interpolate', ['linear'], ['zoom'],
+                5, 3.0,
+                14, 4.0
+              ]
+            }
+          },
+
+          // 12. Boundary — state
+          {
+            id: 'boundary_state',
+            type: 'line',
+            source: 'openmaptiles',
+            'source-layer': 'boundary',
+            filter: ['==', ['get', 'admin_level'], 4],
+            paint: {
+              'line-color': '#8c8070',
+              'line-width': 0.5,
+              'line-dasharray': [4, 3]
+            }
+          },
+
+          // 13. Boundary — country
+          {
+            id: 'boundary_country',
+            type: 'line',
+            source: 'openmaptiles',
+            'source-layer': 'boundary',
+            filter: ['==', ['get', 'admin_level'], 2],
+            paint: {
+              'line-color': '#a09080',
+              'line-width': 0.8,
+              'line-dasharray': [5, 3]
+            }
+          }
+        ]
+      }
+    });
+
+    // ── Zoom controls ────────────────────────────────────────────────
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+
+    // ── Add client markers ──────────────────────────────────────────
+    clients.forEach(client => {
+      const color   = STATUS_COLORS[client.status] || '#aaa';
+      const pinEl   = createPin(color);
+
+      const marker = new maplibregl.Marker({ element: pinEl })
+        .setLngLat([client.lng, client.lat])
+        .addTo(map);
+
+      pinEl.addEventListener('mouseenter', () => showCard(client, pinEl));
+      pinEl.addEventListener('mouseleave', () => hideCard());
+    });
+  </script>
+</body>
+</html>
