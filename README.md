@@ -23,7 +23,7 @@ I have almost <b>6 years of experience with React.js</b> and strong expertise in
 <samp>
 Currently working daily with <b>US clients in English</b>, collaborating on enterprise-level applications, architecture decisions and scalable frontend solutions using Angular, Lit and TypeScript to build scalable and maintainable enterprise applications.
 </samp>
-
+&bnsp;
 - 💻 <samp>Passionate about scalable frontend architecture and modern web engineering.</samp>
 - 🏗️ <samp>Focused on React, Angular, TypeScript, Design Systems and enterprise applications.</samp>
 - 🧪 <samp>Strong experience with testing using Cypress, Playwright and Jest.</samp>
