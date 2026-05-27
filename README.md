@@ -1,45 +1,47 @@
-![headerNew2](./headerNew2.png)
+# <samp>Steven Faria</samp> <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="28px">
 
-<h3><img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Waving%20Hand.png" alt="Waving Hand" width="30" height="30" /> Know me better</h3>
-<p>
-    <a href="https://www.linkedin.com/in/steven-faria-12691317a/">
-        <img src="https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white"/>
-    </a>
-    <a href="https://steven-os.vercel.app/" target="_blank">
-        <img src="https://img.shields.io/badge/My_Site-2ea44f?logo=gamebanana&logoColor=white""/>
-    </a>
-</p>
-<h3><img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Page%20with%20Curl.png" alt="Page with Curl" width="30" height="30" />My Habilities</h3>
-<p width="100%">
-    <img src="https://img.shields.io/badge/HTML5-%23E34F26.svg?logo=html5&logoColor=white"/>
-    <img src="https://img.shields.io/badge/CSS3-%231572B6.svg?logo=css3&logoColor=white"/>
-    <img src="https://img.shields.io/badge/JavaScript-f7e018.svg?logo=javascript&logoColor=white"/>
-    <img src="https://img.shields.io/badge/TypeScript-%23007ACC.svg?logo=typescript&logoColor=white"/>
-    <img src="https://img.shields.io/badge/-GraphQL-E10098?logo=graphql&logoColor=white"/>
-    <img src="https://img.shields.io/badge/Java-%23ED8B00.svg?logo=openjdk&logoColor=white"/>
-    <img src="https://img.shields.io/badge/React.js-%2320232a.svg?logo=react&logoColor=white"/>
-    <img src="https://img.shields.io/badge/Angular.js-%23E23237.svg?logo=Angular&logoColor=white"/>
-    <img src="https://img.shields.io/badge/Laravel-%23FF2D20.svg?logo=laravel&logoColor=white"/>
-    <img src="https://img.shields.io/badge/Chakra-%234ED1C5.svg?logo=chakraui&logoColor=white"/>
-    <img src="https://img.shields.io/badge/MUI-%230081CB.svg?logo=mui&logoColor=white"/>
-    <img src="https://img.shields.io/badge/Styled--Components-DB7093?logo=styled-components&logoColor=white"/>
-    <img src="https://img.shields.io/badge/Redux-%23593d88.svg?logo=redux&logoColor=white"/>
-    <img src="https://img.shields.io/badge/Nest.js-%23E0234E.svg?logo=nestjs&logoColor=white"/>
-    <img src="https://img.shields.io/badge/Node.js-6DA55F?logo=node.js&logoColor=white"/>
-    <img src="https://img.shields.io/badge/Express.js-%23404d59.svg?logo=express&logoColor=white"/>
-    <img src="https://img.shields.io/badge/Spring%20Boot-%236DB33F.svg?logo=springboot&logoColor=white"/>
-    <img src="https://img.shields.io/badge/Strapi-%232E7EEA.svg?logo=strapi&logoColor=white"/>
-    <img src="https://img.shields.io/badge/JWT-black?logo=JSON%20web%20tokens&logoColor=white"/>
-    <img src="https://img.shields.io/badge/RabbitMQ-100000.svg?logo=Rabbitmq&logoColor=white&color=FFB300"/>
-    <img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?logo=mongodb&logoColor=white"/>
-    <img src="https://img.shields.io/badge/PostgreSQL-%23316192.svg?logo=postgresql&logoColor=white"/>
-    <img src="https://img.shields.io/badge/MySQL-%2300f.svg?logo=mysql&logoColor=white"/>
-    <img src="https://img.shields.io/badge/SQLite-%2307405e.svg?logo=sqlite&logoColor=white"/>
-    <img src="https://img.shields.io/badge/-Cypress-%23E5E5E5?logo=cypress&logoColor=white"/>
-    <img src="https://img.shields.io/badge/-Jest-%23C21325?logo=jest&logoColor=white"/>
-    <img src="https://img.shields.io/badge/-Junit-%23C21325?logo=Junit&logoColor=white"/>
-    <img src="https://img.shields.io/badge/Insomnia-black?logo=insomnia&logoColor=white"/>
-    <img src="https://img.shields.io/badge/Postman-FF6C37?logo=postman&logoColor=white"/>
-</p>
+[![LinkedIn Badge](https://img.shields.io/badge/LinkedIn-%23E4405F.svg?&style=flat-square&logo=linkedin&logoColor=white&color=071A2C&link=YOUR_LINKEDIN)](YOUR_LINKEDIN)
+[![Portfolio Badge](https://img.shields.io/badge/Portfolio-%23E4405F.svg?&style=flat-square&logo=vercel&logoColor=white&color=071A2C&link=YOUR_PORTFOLIO)](YOUR_PORTFOLIO)
+[![Gmail Badge](https://img.shields.io/badge/Gmail-%23E4405F.svg?&style=flat-square&logo=gmail&logoColor=white&color=071A2C&link=mailto:YOUR_EMAIL)](mailto:YOUR_EMAIL)
 
-![FariaSteven Stats](https://github-readme-stats.vercel.app/api/top-langs/?username=FariaSteven&layout=compact&theme=radical)
+---
+
+## <samp>Hello World!</samp> 🌎
+
+<samp>
+I'm a <b>Mid-level Frontend / Fullstack Software Engineer from Brazil</b> 🇧🇷, focused on building scalable enterprise applications with modern frontend technologies and strong software architecture principles.
+</samp>
+
+<br/>
+
+<samp>
+I have almost <b>6 years of experience with React.js</b> and strong expertise in <b>Angular, TypeScript, frontend architecture, design systems, Web Components and fullstack applications</b>.
+</samp>
+
+<br/>
+
+<samp>
+Currently working daily with <b>US clients in English</b>, collaborating on enterprise-level applications, architecture decisions and scalable frontend solutions using Angular, Lit and TypeScript to build scalable and maintainable enterprise applications.
+</samp>
+
+&nbsp;👨‍💻&nbsp;🚀
+
+- 💻 <samp>Passionate about scalable frontend architecture and modern web engineering.</samp>
+- 🏗️ <samp>Focused on React, Angular, TypeScript, Design Systems and enterprise applications.</samp>
+- 🧪 <samp>Strong experience with testing using Cypress, Playwright and Jest.</samp>
+- 🌎 <samp>Experienced working with international teams and US-based clients.</samp>
+- ⚡ <samp>I enjoy solving complex problems and building maintainable systems.</samp>
+- 📚 <samp>Constantly learning about architecture, performance and developer experience.</samp>
+
+## <samp>Currently focusing on</samp> 📚
+
+<samp>
+
+- Frontend Architecture
+- System design
+- Performance Optimization
+- Scalable Systems
+  
+ </samp>
+
+---
