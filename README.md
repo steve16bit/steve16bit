@@ -1,13 +1,4 @@
-# <samp>Steven Faria</samp> <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="28px">
-
-[![LinkedIn Badge](https://img.shields.io/badge/LinkedIn-%23E4405F.svg?&style=flat-square&logo=linkedin&logoColor=white&color=071A2C&link=YOUR_LINKEDIN)](YOUR_LINKEDIN)
-[![Portfolio Badge](https://img.shields.io/badge/Portfolio-%23E4405F.svg?&style=flat-square&logo=vercel&logoColor=white&color=071A2C&link=YOUR_PORTFOLIO)](YOUR_PORTFOLIO)
-[![Gmail Badge](https://img.shields.io/badge/Gmail-%23E4405F.svg?&style=flat-square&logo=gmail&logoColor=white&color=071A2C&link=mailto:YOUR_EMAIL)](mailto:YOUR_EMAIL)
-
----
-
-## <samp>Hello World!</samp> 🌎
-
+# <samp>Hi, I am Steven Faria</samp> <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="28px">
 <samp>
 I'm a <b>Senior Frontend / Fullstack Software Engineer from Brazil</b> 🇧🇷, focused on building scalable enterprise applications with modern frontend technologies and strong software architecture principles.
 </samp>
