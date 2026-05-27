@@ -9,7 +9,7 @@
 ## <samp>Hello World!</samp> 🌎
 
 <samp>
-I'm a <b>Mid-level Frontend / Fullstack Software Engineer from Brazil</b> 🇧🇷, focused on building scalable enterprise applications with modern frontend technologies and strong software architecture principles.
+I'm a <b>Senior Frontend / Fullstack Software Engineer from Brazil</b> 🇧🇷, focused on building scalable enterprise applications with modern frontend technologies and strong software architecture principles.
 </samp>
 
 <br/>
